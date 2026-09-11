@@ -1,0 +1,12 @@
+{
+  "name": "consentpath",
+  "version": "0.1.0",
+  "description": "Clinical trial enrolment where authorisation is a PostgreSQL row-level security policy, defended by a negative-authz test matrix.",
+  "type": "module",
+  "private": true,
+  "engines": { "node": ">=22.6" },
+  "scripts": {
+    "test": "node --test",
+    "demo": "node src/demo.ts"
+  }
+}
