@@ -2,6 +2,22 @@
 
 > Clinical trial enrolment where authorisation is a PostgreSQL row-level security policy, defended by a negative-authz test matrix.
 
+## Live deployment
+
+[![CI and deployment](https://github.com/SlateGitOrg/consentpath/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/SlateGitOrg/consentpath/actions/workflows/ci.yml)
+
+[Open the interactive Consent Path demo](https://slategitorg.github.io/consentpath/)
+
+The deployed interface uses a deterministic offline scenario to make the repository's tested decision rule visible without external services or private data.
+
+### Desktop
+
+![Consent Path desktop deployment](docs/assets/deployed-desktop.png)
+
+### Mobile
+
+<img src="docs/assets/deployed-mobile.png" alt="Consent Path mobile deployment" width="390">
+
 `FLAGSHIP` · **Full Stack Engineering** · Advanced · ~4-5 weeks · Healthcare / clinical research
 
 **Primary language:** TypeScript
