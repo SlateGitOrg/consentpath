@@ -1,1 +1,38 @@
-<!doctype html><html lang="en" class="workflow-board"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Make clinical-trial authorization a database rule that cannot be bypassed."><meta name="theme-color" content="#f1f6f8"><title>Consent Path — Live demo</title><link rel="stylesheet" href="./styles.css"></head><body><div class="shell"><nav class="topbar" aria-label="Primary"><a class="brand" href="./"><span class="brand-mark">S</span>Consent Path</a><a class="repo-link" href="https://github.com/SlateGitOrg/consentpath">View source on GitHub</a></nav><main><header class="hero"><div><p class="kicker">Trial enrollment</p><h1>Make clinical-trial authorization a database rule that cannot be bypassed.</h1></div><div class="hero-side"><p>This interactive browser scenario makes the repository's tested decision rule visible. Adjust the operating condition and inspect what changes.</p><div class="status" role="status"><span class="status-dot" aria-hidden="true"></span>RLS enforced</div></div></header><section class="visual" aria-label="Interactive project view"><div class="workflow" aria-label="Trial enrollment workflow"><button type="button" class="stage " data-stage="0"><span class="stage-number">1</span><span><strong>Screened</strong><small>8 items</small></span></button><span class="connector" aria-hidden="true"></span><button type="button" class="stage active" data-stage="1"><span class="stage-number">2</span><span><strong>Consented</strong><small>3 items</small></span></button><span class="connector" aria-hidden="true"></span><button type="button" class="stage " data-stage="2"><span class="stage-number">3</span><span><strong>Enrolled</strong><small>1 items</small></span></button><span class="connector" aria-hidden="true"></span><button type="button" class="stage " data-stage="3"><span class="stage-number">4</span><span><strong>Follow-up</strong><small>0 items</small></span></button><div class="activity"><span class="activity-dot"></span><p><strong>Latest decision</strong><br><span id="activity-copy">Evidence accepted and moved forward.</span></p><time>Just now</time></div></div></section><aside class="panel"><div class="metric"><strong id="primary-metric" aria-live="polite">PASS</strong><span>authorization matrix</span></div><div class="control"><label for="scenario-range"><span>Site role scope</span><output id="scenario-output" for="scenario-range">2 sites</output></label><input id="scenario-range" type="range" min="1" max="5" value="2" aria-label="Site role scope"></div><div class="facts"><div class="fact"><strong>24/24</strong><span>negative tests</span></div><div class="fact"><strong>0</strong><span>cross-site reads</span></div><div class="fact"><strong>6</strong><span>policy roles</span></div></div></aside><footer class="demo-note"><p>Representative offline scenario. The repository's native test suite verifies the core behavior; this page visualizes its decision path without external services or private data.</p><a href="https://github.com/SlateGitOrg/consentpath#readme">Read the engineering case study</a></footer></main></div><script src="./app.js"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Evaluate participant access using role, site, action, consent state, and treatment blinding.">
+  <title>Consent Path · Working Lab</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#results">Skip to results</a>
+  <header class="masthead"><a class="brand" href="https://github.com/SlateGitOrg/consentpath">Consent Path</a><span class="build-state"><i></i> live computation</span></header>
+  <main>
+    <section class="intro">
+      <p class="eyebrow">Clinical authorization matrix</p>
+      <h1>Run the decision,<br><em>inspect the evidence.</em></h1>
+      <p class="lede">Evaluate participant access using role, site, action, consent state, and treatment blinding.</p>
+    </section>
+    <section class="workspace" aria-label="Interactive project workspace">
+      <form id="workspace-form" class="control-panel">
+        <div class="panel-heading"><span>01</span><div><p>Inputs</p><h2>Configure the run</h2></div></div>
+        <div class="fields"><label class="field" for="role"><span>User role</span><select id="role" name="role"><option>COORDINATOR</option><option selected>BLINDED_INVESTIGATOR</option><option>UNBLINDED_STATS</option><option>MONITOR</option></select></label>
+<label class="field" for="userSite"><span>User site</span><select id="userSite" name="userSite"><option selected>SITE-A</option><option>SITE-B</option></select></label>
+<label class="field" for="participantSite"><span>Participant site</span><select id="participantSite" name="participantSite"><option selected>SITE-A</option><option>SITE-B</option></select></label>
+<label class="field" for="action"><span>Requested action</span><select id="action" name="action"><option>read</option><option selected>read_arm</option><option>export</option></select></label>
+<div class="field field-checkbox"><label class="switch"><input id="consented" name="consented" type="checkbox" checked><span>Participant consent recorded</span></label></div></div>
+        <div class="actions"><button class="run" type="submit">Run analysis <span>→</span></button><button id="reset-button" class="reset" type="button">Reset</button></div>
+      </form>
+      <section id="results" class="result-panel" aria-live="polite" aria-busy="true">
+        <div class="panel-heading"><span>02</span><div><p>Output</p><h2>Decision trace</h2></div></div>
+        <div id="result-content" class="result-content"><div class="loading">Computing initial scenario…</div></div>
+      </section>
+    </section>
+  </main>
+  <footer><p>Built from the tested logic in <a href="https://github.com/SlateGitOrg/consentpath">SlateGitOrg/consentpath</a>.</p><p>Interactive capstone · Sneha Chandra</p></footer>
+  <script type="module" src="app.mjs"></script>
+</body>
+</html>
