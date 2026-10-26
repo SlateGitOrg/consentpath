@@ -1,7 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
 
 /**
- * THE DIFFERENTIATOR LIVES HERE.
+ * Authorisation lives here.
  *
  * Authorisation is enforced by the data layer, not by request handlers.
  *
@@ -15,8 +15,8 @@ import { DatabaseSync } from 'node:sqlite';
  * application can issue that returns a row its session is not entitled to,
  * including a hand-written one.
  *
- * What this buys you is the thing a scattered `if (user.siteId === ...)` check
- * cannot: the guarantee does not depend on remembering to write the check.
+ * This removes the failure mode of a scattered `if (user.siteId === ...)`
+ * check: the guarantee does not depend on remembering to write it.
  */
 
 export type Role = 'COORDINATOR' | 'BLINDED_INVESTIGATOR' | 'UNBLINDED_STATS' | 'MONITOR';

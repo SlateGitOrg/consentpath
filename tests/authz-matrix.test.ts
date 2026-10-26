@@ -29,8 +29,8 @@ function sessionsFor(userId: string): Session[] {
 
 describe('the negative authorisation matrix', () => {
   test('THE MATRIX: no session can read a participant outside its entitlement', () => {
-    // Enumerating what must be IMPOSSIBLE is the suite generic projects skip,
-    // because writing it means stating every denial explicitly.
+    // Enumerating what must be impossible means stating every denial explicitly
+    // instead of only testing the happy path.
     const db = fresh();
     let denials = 0;
     let permits = 0;

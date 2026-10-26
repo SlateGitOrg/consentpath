@@ -1,35 +1,54 @@
 # Architecture
 
-> Fill this in as you build. It is the document you will screen-share in a
-> system-design interview, so write it for that audience.
-
 ## Context
 
-Why this system exists, who uses it, and what they do instead today.
+In a multi-site clinical trial, staff at one site must not see another site's
+participants, blinded roles must not see arm assignment, and exports must not
+exceed what a participant consented to. Enforcing this with checks in request
+handlers fails silently the first time someone forgets one. consentpath moves
+the rules into the data layer so that the application cannot express a query
+that violates them.
 
 ## Container view
 
-The major runtime pieces and how they talk. Keep the diagram in Mermaid so it
-reviews well in a pull request.
-
 ```mermaid
 flowchart LR
-  A[Source] --> B[Ingest]
-  B --> C[(Store)]
-  C --> D[Service]
-  D --> E[Surface]
+  App["Application code<br/>(src/demo.ts, tests)"] -->|"setSession(claims)"| S[("session table<br/>1 row")]
+  App -->|"SELECT only"| V["Security views<br/>v_participant, v_consent"]
+  V -->|"filter by claims"| T[("Base tables<br/>participant, consent,<br/>monitor_grant, site")]
+  S --> V
+  App -->|"append"| L[("access_log<br/>append-only triggers")]
 ```
+
+The reference design is PostgreSQL row-level security: a low-privilege role,
+`SET LOCAL` session claims, and policies on the tables. This repository runs on
+`node:sqlite`, which has no RLS, so the same shape is built from a one-row
+`session` table and views that join against it. The application is only given
+the views.
 
 ## Key decisions
 
-Record each significant choice, the alternatives considered, and the reason —
-one short section each. The differentiator in the README should appear here as
-a decision with its trade-offs spelled out.
+- **Policy in the data layer.** Site isolation, delegated monitor access and
+  blinding are defined once in `v_participant`. Any query the application
+  writes against the view, including an unfiltered `SELECT *`, is constrained.
+  Trade-off: the guarantee is only as strong as the rule that the application
+  never touches base tables; with PostgreSQL this is enforced by role grants.
+- **Blinding as a column rule.** `arm` is `NULL` in the view unless the session
+  role is `UNBLINDED_STATS`, so a blinded caller never receives the value.
+- **Grants over claims for monitors.** A monitor's visibility comes from
+  `monitor_grant`, not from the site they claim in the session.
+- **Export checks current consent.** `exportGenomic` reads the latest consent
+  version through `v_consent`, so a re-consent takes effect immediately.
+- **Append-only log.** `BEFORE UPDATE` and `BEFORE DELETE` triggers abort.
 
 ## Failure modes
 
-What breaks, how you detect it, and what the system does instead of lying.
+- A missing or empty session matches no rows (the view returns nothing).
+- A role not in the policy list sees nothing.
+- Writing to the access log is the caller's responsibility (`logAccess`); it is
+  not automatic on read.
 
-## What is out of scope
+## Out of scope
 
-Name it explicitly. Scope discipline reads as seniority.
+Real PostgreSQL RLS policies and a web application are not implemented here,
+and the project is not HIPAA or GCP certified.
