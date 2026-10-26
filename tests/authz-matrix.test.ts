@@ -28,7 +28,7 @@ function sessionsFor(userId: string): Session[] {
 }
 
 describe('the negative authorisation matrix', () => {
-  test('THE MATRIX: no session can read a participant outside its entitlement', () => {
+  test('no session can read a participant outside its entitlement', () => {
     // Enumerating what must be impossible means stating every denial explicitly
     // instead of only testing the happy path.
     const db = fresh();
